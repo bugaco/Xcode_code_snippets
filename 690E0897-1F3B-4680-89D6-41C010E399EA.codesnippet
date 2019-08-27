@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDECodeSnippetCompletionPrefix</key>
+	<string>defaultRefresh</string>
+	<key>IDECodeSnippetCompletionScopes</key>
+	<array>
+		<string>All</string>
+	</array>
+	<key>IDECodeSnippetContents</key>
+	<string>var page: Int = 1
+var pageSize: Int = PageSize
+var dataSource = [&lt;#Model#&gt;]()
+
+extension &lt;#Class#&gt; {
+    // MARK: 下拉刷新、上拉加载更多
+    func setupRefresh() {
+        collectionView.mj_header = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction: #selector(refreshData))
+        collectionView.mj_footer = MJRefreshBackNormalFooter.init(refreshingTarget: self, refreshingAction: #selector(requestMoreData))
+        collectionView.mj_header.beginRefreshing()
+    }
+    
+    @objc func refreshData() {
+        page = 1
+        requestData()
+    }
+    
+    @objc func requestMoreData() {
+        page += 1
+        requestData()
+    }
+    
+    func requestData() {
+        
+        var params = [String: Any]()
+        params["page_start"] = "\(page)"
+        params["page_size"] = "\(pageSize)"
+        
+        
+        let url = kTopicListnUrl
+
+        NetWork.requestData(.post, URLString: url, parameters: params) { (result) in
+            self.collectionView.mj_header.endRefreshing()
+            self.collectionView.mj_footer.endRefreshing()
+            switch result {
+                
+            case .success(let json):
+                
+                /// 请求成功后，再处理更新page
+                let listJson = json["data"]["&lt;#data name#&gt;"].arrayValue
+                
+                if self.page == 1 {
+                    self.dataSource.removeAll()
+                }
+                
+                if listJson.count &gt; 0 {
+                    for articleJson in listJson {
+                        let model = &lt;#Model#&gt;(fromJson: articleJson)
+                        self.dataSource.append(model)
+                    }
+                } else {
+                    self.page -= 1 // 没有数据返回，回滚pages
+                    self.collectionView.mj_footer.endRefreshingWithNoMoreData()
+                }
+                self.collectionView.reloadData()
+            case .error(let msg):
+                print("error:\(msg)")
+                self.page -= 1 // 如果请求失败，page - 1
+                self.collectionView.mj_footer.endRefreshingWithNoMoreData()
+            }
+        }
+    }
+}</string>
+	<key>IDECodeSnippetIdentifier</key>
+	<string>690E0897-1F3B-4680-89D6-41C010E399EA</string>
+	<key>IDECodeSnippetLanguage</key>
+	<string>Xcode.SourceCodeLanguage.Generic</string>
+	<key>IDECodeSnippetTitle</key>
+	<string>Setup Refresh</string>
+	<key>IDECodeSnippetUserSnippet</key>
+	<true/>
+	<key>IDECodeSnippetVersion</key>
+	<integer>2</integer>
+</dict>
+</plist>

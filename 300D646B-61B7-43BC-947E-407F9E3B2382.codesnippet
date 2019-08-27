@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDECodeSnippetCompletionPrefix</key>
+	<string>getLocation</string>
+	<key>IDECodeSnippetCompletionScopes</key>
+	<array>
+		<string>All</string>
+	</array>
+	<key>IDECodeSnippetContents</key>
+	<string>    /** 经纬度信息 */
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    NSNumber *lon = [NSUserDefaults.standardUserDefaults objectForKey:Longitude];
+    NSNumber *lat = [NSUserDefaults.standardUserDefaults objectForKey:Latitude];
+    if (lon &amp;&amp; lat) {
+        [params setObject:lon forKey:@"lng"];
+        [params setObject:lat forKey:@"lat"];
+    }</string>
+	<key>IDECodeSnippetIdentifier</key>
+	<string>300D646B-61B7-43BC-947E-407F9E3B2382</string>
+	<key>IDECodeSnippetLanguage</key>
+	<string>Xcode.SourceCodeLanguage.Generic</string>
+	<key>IDECodeSnippetTitle</key>
+	<string>Get user's location</string>
+	<key>IDECodeSnippetUserSnippet</key>
+	<true/>
+	<key>IDECodeSnippetVersion</key>
+	<integer>2</integer>
+</dict>
+</plist>
